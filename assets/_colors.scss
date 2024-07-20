@@ -1,0 +1,22 @@
+$dark: #0A0A0A;
+$light: #FFFFFF;
+
+// Default Theme Variables DARK MODE
+:root {
+  --color-primary: #FFFFFF;
+  --color-gray: #929292;
+  --color-secondary: #0A0A0A;
+  --bg-primary: #0A0A0A;
+  --bg-secondary: #FFFFFF;
+  --border-color: #FFFFFF;
+}
+
+// Default Theme Variables LIGHT MODE
+html.light-mode {
+  --color-primary: #0A0A0A;
+  --color-gray: #929292;
+  --color-secondary: lighten(#0A0A0A, 35%);
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #0A0A0A;
+  --border-color: #0A0A0A;
+}
