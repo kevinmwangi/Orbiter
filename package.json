@@ -11,10 +11,13 @@
   },
   "dependencies": {
     "@nuxtjs/google-fonts": "^3.2.0",
+    "@popperjs/core": "^2.11.8",
+    "air-datepicker": "^3.5.3",
     "animejs": "^3.2.2",
     "date-fns": "^3.6.0",
     "lodash": "^4.17.21",
     "nuxt": "^3.12.2",
+    "v-calendar": "^3.1.2",
     "vue": "latest"
   },
   "devDependencies": {

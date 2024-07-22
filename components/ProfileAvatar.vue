@@ -1,5 +1,7 @@
 <template>
-    <div :class="$style.avatar">
+    <div :class="[$style.avatar, $style[directionClass]]"
+         @mouseenter="(event) => handleAvatarHover(true, event)"
+         @mouseleave="(event) => handleAvatarHover(false, event)">
         <div :class="$style.profileInfo">
             <div :class="$style.profileInfoHeader">
                 <div :class="$style.avatarImage">
@@ -69,6 +71,47 @@ const props = defineProps( {
 const isShowingMore = ref( false );
 const relativeTime = ref('')
 let intervalId = ref<IntervalId | null>(null)
+const directionClass = ref('');
+
+const handleAvatarHover = (hover: boolean, event: MouseEvent) => {
+	const target = event.currentTarget as HTMLElement | null;
+	if (!target) return; // Exit early if target is null
+
+	if (hover) {
+
+		const rect = target.getBoundingClientRect();
+		const viewportWidth = window.innerWidth;
+		const viewportHeight = window.innerHeight;
+
+		const edgeThreshold = 10;
+
+		const isNearLeftEdge = rect.left < edgeThreshold;
+		const isNearRightEdge = rect.right > viewportWidth - edgeThreshold;
+		const isNearTopEdge = rect.top < edgeThreshold;
+		const isNearBottomEdge = rect.bottom > viewportHeight - edgeThreshold;
+  
+		if (isNearLeftEdge) {
+			if (isNearBottomEdge) {
+				directionClass.value = 'bottomLeftEdge';
+			} else {
+				directionClass.value = 'leftEdge';
+			}
+		} else if (isNearRightEdge) {
+			if (isNearBottomEdge) {
+				directionClass.value = 'bottomRightEdge';
+			} else {
+				directionClass.value = 'rightEdge';
+			}
+		} else if (isNearTopEdge) {
+			directionClass.value = 'topEdge';
+		} else if (isNearBottomEdge) {
+			directionClass.value = 'bottomEdge';
+		}
+
+	} else {
+		directionClass.value = '';
+    }
+};
 
 const updateRelativeTime = () => {
 	if (props.avatarData?.created_at) {
@@ -156,6 +199,25 @@ onUnmounted(() => {
 
     &:hover {
         transform: translate(-12%, -20%) !important;
+        
+        &.leftEdge {
+            transform: translate(calc(0% - 60px), calc(0% - 60px)) !important;
+        }
+        &.rightEdge {
+            transform:  translate(calc(-100% + 30px), calc(0% - 60px)) !important
+        }
+        &.topEdge {
+            transform: translate(calc(0% - 60px), calc(0% - 60px)) !important;
+        }
+        &.bottomEdge {
+            transform: translate(calc(0% - 60px), calc(-100% + 60px)) !important;
+        }
+        &.bottomRightEdge {
+            transform: translate(calc(-100% + 60px), calc(-100% + 60px)) !important;
+        }
+        &.bottomLeftEdge {
+            transform: translate(calc(0% - 60px), calc(-100% + 60px)) !important;
+        }
         
         .profileInfo {
             background: linear-gradient(var(--bg-primary), var(--bg-primary)) padding-box, linear-gradient(to bottom, var(--bg-secondary) 0%, var(--bg-secondary) 50%, var(--bg-primary) 100%) border-box;

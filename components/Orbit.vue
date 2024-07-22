@@ -8,10 +8,8 @@
                 :style="{
                     width: `${getOrbitDiameter(orbitIndex)}px`,
                     height: `${getOrbitDiameter(orbitIndex) * 0.5}px`,
-                    // opacity: orbit.isVisible ? 1 : 0,
                     transform: `translateY(${-20}px) scale(${orbit.scale})`,
                     transition: 'transform 0.3s ease, opacity 0.3s ease',
-                    // display: orbit.isVisible ? 'flex' : 'none',
                     'z-index': props.maxOrbits - (orbitIndex + 1),
                 }">
             <div v-if="(orbitIndex + 1) === props.maxOrbits" :class="$style.currentDate" :style="getCurrentDate(orbitIndex)" ref="currentDate">{{ formatDate(orbit.contact_date) }}</div>
@@ -20,7 +18,6 @@
                            :avatarData="avatar"
                            :class="$style.avatarWrapper"
                            :style="getAvatarPosition(avatarIndex, getMaxAvatars(orbitIndex), orbitIndex)"
-                           @click="handleAvatarClick(avatar)"
             />
 
             <button
@@ -48,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, watch, useCssModule, nextTick } from 'vue';
+import { ref, computed, onMounted, onUnmounted, useCssModule } from 'vue';
 import throttle from 'lodash/throttle'
 import anime from 'animejs/lib/anime';
 import type { PropType } from 'vue';
@@ -82,7 +79,6 @@ const props = defineProps( {
 	},
 } );
 
-const emit = defineEmits( [ 'avatar-click', 'load-more' ] );
 const containerRef = ref<HTMLDivElement | null>( null );
 const currentDate = ref<HTMLDivElement | null>( null );
 const isAnimating = ref(false);
@@ -322,24 +318,6 @@ const showPreviousAvatars = (orbitIndex: number) => {
 	}
 };
 
-const handleAvatarClick = ( avatar: any ) => {
-	emit( 'avatar-click', avatar );
-};
-
-// Add a new function to handle the initial animation when the component mounts
-// const initialAnimation = () => {
-// 	const orbits = containerRef.value?.querySelectorAll(`.${$style.orbit}`);
-// 	if (!orbits) return;
-//
-// 	anime({
-// 		targets: Array.from(orbits),
-// 		opacity: [0, 1], // Animate from 0 to 1 for all orbits
-// 		delay: anime.stagger(100),
-// 		duration: 800,
-// 		easing: 'easeOutQuad',
-// 	});
-// };
-
 const initialAnimation = () => {
 	const orbits = containerRef.value?.querySelectorAll(`.${$style.orbit}`);
 	if (!orbits) return;
@@ -423,29 +401,25 @@ const handleScroll = (event: WheelEvent) => {
 	animateOrbits(direction, targetScrollPosition);
 };
 
+const handleResize = () => {
+	// Force re-render of avatars to recalculate their positions
+	orbitPages.value = [...orbitPages.value];
+};
+
 // Throttled scroll handler (adjust 250ms as needed)
 const throttledHandleScroll = throttle(handleScroll, 250, { leading: true, trailing: false }); // Ensure initial call
 
 onMounted( () => {
-
 	containerRef.value?.addEventListener( 'wheel', throttledHandleScroll, { passive: true } );
+	window.addEventListener('resize', handleResize);
 	initialAnimation();
-	
-	// await nextTick(() => {
-	// 	containerRef.value?.addEventListener( 'wheel', throttledHandleScroll, { passive: true } );
-	// 	initialAnimation();
-	// })
 });
 
 onUnmounted(() => {
 	containerRef.value?.removeEventListener('wheel', throttledHandleScroll);
+	window.removeEventListener('resize', handleResize);
 });
 
-const handleResize = () => {
-	// Implement any resize logic if needed
-};
-
-// You can add more watchers or computed properties if needed
 </script>
 
 <style module>
@@ -489,6 +463,11 @@ const handleResize = () => {
         .avatarWrapper {
             position: absolute;
             transform-origin: center center;
+            
+            &:hover {
+                z-index: 100;
+            }
+           
         }
 
         &:has(.avatarWrapper:hover) {
