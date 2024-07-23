@@ -3,11 +3,13 @@
     <div :class="$style.orbitsContainer" ref="container">
         <DatePicker :initial-date="formattedStartDate" @dateSelected="updateDate" />
         <Orbit :orbit-data="sortedOrbits"/>
+        <SpeedInsights />
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import { SpeedInsights } from "@vercel/speed-insights/nuxt"
 import DatePicker from '../components/DatePicker.vue'
 import Orbit from '../components/Orbit.vue'
 import type { SingleOrbit } from '~/types';

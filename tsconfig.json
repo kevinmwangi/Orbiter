@@ -5,6 +5,12 @@
     "strict": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "types": ["@nuxt/types", "@types/node"]
-  }
+    "types": ["@nuxt/types", "@types/node"],
+    "typeRoots": ["./types"]
+  },
+  "include": [
+    "./**/*.ts",
+    "./**/*.vue",
+    "./types/**/*.d.ts"
+  ]
 }
