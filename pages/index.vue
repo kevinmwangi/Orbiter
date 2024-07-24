@@ -1,17 +1,20 @@
 
 <template>
     <NuxtLayout>
-        <div :class="$style.orbitsContainer" ref="container">
+        <div v-if="orbits" :class="$style.orbitsContainer" ref="container">
             <DatePicker :initial-date="formattedStartDate" @dateSelected="updateDate" />
             <Orbit :orbit-data="sortedOrbits"/>
             <SpeedInsights />
         </div>
+        
+        <Loader v-else/>
     </NuxtLayout>
 </template>
 
 <script setup lang="ts">
-import { ref, computed,  } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { SpeedInsights } from "@vercel/speed-insights/nuxt"
+import Loader from "../components/Loader.vue"
 import DatePicker from "../components/DatePicker.vue"
 import Orbit from "../components/Orbit.vue"
 import type { SingleOrbit } from "../types";
@@ -33,16 +36,20 @@ useHead({
 	}]
 })
 
-const startDate = ref(new Date());
-const formattedStartDate = computed(() => startDate.value.toISOString().split('T')[0]);
-
-// Initial server-side fetch
-const { data: orbits } = await useAsyncData('orbits', () => {
-	return $fetch<SingleOrbit[]>('https://xsrr-l2ye-dpbj.f2.xano.io/api:oUvfVMO5/receive_week', {
-		params: { start_date: formattedStartDate.value },
-		headers: { 'accept': 'application/json' }
-	});
+const startDate = ref<Date | null>(null);
+const formattedStartDate = computed(() => {
+	if (startDate.value) {
+		return startDate.value.toISOString().split('T')[0];
+	} else {
+		return new Date().toISOString().split('T')[0];
+	}
 });
+
+// Server-Side Fetch Using useAsyncData
+const { data: orbits } = await useAsyncData('orbits', () => $fetch<SingleOrbit[]>(
+	'https://xsrr-l2ye-dpbj.f2.xano.io/api:oUvfVMO5/receive_week',
+	{ params: { start_date: formattedStartDate.value }, headers: { 'accept': 'application/json' } }
+));
 
 const fetchOrbits = async (date: string) => {
 	try {
@@ -66,6 +73,9 @@ const sortedOrbits = computed(() => {
 	);
 });
 
+onMounted(() => {
+	startDate.value = new Date(orbits.value?.[0]?.contact_date || new Date());
+});
 
 </script>
 
