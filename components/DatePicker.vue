@@ -35,7 +35,7 @@ const isDatepickerVisible = ref(false);
 const isInitialized = ref(false);
 
 const toggleDatepicker = async () => {
-	if (!isInitialized.value) return;
+	if (!isInitialized.value || !datepicker || !datepicker.$datepicker) return;
 
 	isDatepickerVisible.value = !isDatepickerVisible.value;
 
@@ -125,31 +125,35 @@ onMounted(async () => {
 
 		datepicker = new AirDatepicker(datepickerContainer.value, options);
 
-		if (datepicker.$datepicker) {
+		if (datepicker && datepicker.$datepicker) {
 			datepicker.$datepicker.style.display = 'none';
 			datepicker.$datepicker.style.transformOrigin = 'top center';
+			isInitialized.value = true;
+		} else {
+			console.error('Datepicker not properly initialized');
 		}
-
-		isInitialized.value = true;
 	}
 });
 
 onUnmounted(() => {
-    if (datepicker) {
-        datepicker.destroy();
-    }
-    if (popper) {
-        popper.destroy();
-    }
-});
-
-onUnmounted(() => {
-    if (datepicker) {
-        datepicker.destroy();
-    }
-    if (popper) {
-        popper.destroy();
-    }
+	if (datepicker) {
+		try {
+			if (typeof datepicker.destroy === 'function') {
+				datepicker.destroy();
+			} else {
+				console.warn('Datepicker destroy method not found');
+			}
+		} catch (error) {
+			console.error('Error destroying datepicker:', error);
+		}
+	}
+	if (popper) {
+		popper.destroy();
+	}
+	// Remove any lingering event listeners
+	if (datepickerButton.value) {
+		datepickerButton.value.removeEventListener('click', toggleDatepicker);
+	}
 });
 </script>
 

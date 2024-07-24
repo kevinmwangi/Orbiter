@@ -4,15 +4,16 @@
   "compilerOptions": {
     "strict": true,
     "esModuleInterop": true,
-    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
     "target": "ESNext",
     "module": "ESNext",
-    "types": ["@nuxt/types", "@types/node", "@nuxt/image"],
-    "typeRoots": ["./types"]
+    "types": ["node", "@nuxt/types"]
   },
   "include": [
     "./**/*.ts",
     "./**/*.vue",
-    "./types/**/*.d.ts"
+    "./types/**/*.d.ts",
+    ".nuxt/nuxt.d.ts"
   ]
 }

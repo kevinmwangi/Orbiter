@@ -2,9 +2,12 @@ import { defineNuxtConfig } from 'nuxt/config'
 
 export default defineNuxtConfig({
 	devtools: { enabled: true },
-	dev: true,
-	debug: true,
-	pages: true,
+	ssr: true,
+	sourcemap: true,
+	typescript: {
+		strict: true,
+		typeCheck: true
+	},
 
 	app: {
 		head: {
@@ -60,11 +63,6 @@ export default defineNuxtConfig({
 		}
 	},
 
-	build: {
-		analyze: true,
-		transpile: ['lodash-es'], // Transpile ES modules
-	},
-
 	vite: {
 		css: {
 			preprocessorOptions: {
@@ -80,13 +78,11 @@ export default defineNuxtConfig({
 			target: 'esnext',
 			minify: 'terser',
 			cssMinify: true,
+			sourcemap: true
 		},
 		optimizeDeps: {
 			include: ['vue', 'lodash', 'date-fns', 'air-datepicker', '@popperjs/core', 'animejs', '@vercel/speed-insights']
 		},
-		server: {
-			middlewareMode: true
-		}
 	},
 
 	nitro: {
@@ -105,15 +101,10 @@ export default defineNuxtConfig({
 		}
 	},
 
-	experimental: {
-		payloadExtraction: true,
-		viewTransition: true
-	},
-
 	routeRules: {
 		'/**': { headers: { 'Cache-Control': 'max-age=300, s-maxage=3600' } },
-		'/': { prerender: true }, // Generated at build time for SEO purpose
+		'/': { prerender: true },
 	},
 
-	compatibilityDate: '2024-07-05'
+	compatibilityDate: '2024-07-24'
 })

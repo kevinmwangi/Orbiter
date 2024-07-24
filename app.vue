@@ -1,5 +1,7 @@
 <template>
-    <NuxtPage/>
+    <NuxtLayout>
+        <NuxtPage/>
+    </NuxtLayout>
 </template>
 
 <style lang="scss">
@@ -11,3 +13,5 @@ body {
   overflow: clip;
 }
 </style>
+<script setup lang="ts">
+</script>

@@ -84,7 +84,6 @@ const props = defineProps( {
 const containerRef = ref<HTMLDivElement | null>( null );
 const currentDate = ref<HTMLDivElement | null>( null );
 const isAnimating = ref(false);
-// const orbitPages = ref<number[]>([0]);
 const orbitPages = ref<number[]>(Array(props.orbitData.length).fill(0));
 const $style = useCssModule();
 const scrollPosition = ref( 0 );
@@ -137,9 +136,7 @@ const getOrbitPage = (orbitIndex: number): number => {
 	if (orbitIndex >= 0 && orbitIndex < orbitPages.value.length) {
 		return orbitPages.value[orbitIndex];
 	} else {
-		// Handle the case where orbitIndex is out of bounds
-		console.warn(`Invalid orbitIndex: ${orbitIndex}`);
-		return 0; // Or throw an error, etc.
+		return orbitPages.value[orbitIndex] = 0; // Or throw an error, etc.
 	}
 };
 
