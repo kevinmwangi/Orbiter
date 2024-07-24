@@ -77,6 +77,7 @@ export default defineNuxtConfig({
 			}
 		},
 		build: {
+			target: 'esnext',
 			minify: 'terser',
 			cssMinify: true,
 		},
@@ -96,6 +97,11 @@ export default defineNuxtConfig({
 		prerender: {
 			crawlLinks: true,
 			routes: ['/']
+		},
+		esbuild: {
+			options: {
+				target: 'esnext'
+			}
 		}
 	},
 

@@ -5,6 +5,8 @@
     "strict": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
+    "target": "ESNext",
+    "module": "ESNext",
     "types": ["@nuxt/types", "@types/node", "@nuxt/image"],
     "typeRoots": ["./types"]
   },
