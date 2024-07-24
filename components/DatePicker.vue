@@ -9,18 +9,19 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted, nextTick } from 'vue';
-import AirDatepicker from 'air-datepicker';
+import AirDatepicker  from 'air-datepicker';
+import type { AirDatepickerOptions, AirDatepickerPosition } from 'air-datepicker';
 import { createPopper } from '@popperjs/core';
 import anime from 'animejs';
 import 'air-datepicker/air-datepicker.css';
 import localeEn from "air-datepicker/locale/en";
 
-const datepickerButton = ref(null);
-const datepickerContainer = ref(null);
-let datepicker = null;
-let popper = null;
+const datepickerButton = ref<HTMLButtonElement | null>(null);
+const datepickerContainer = ref<HTMLDivElement | null>(null);
+let datepicker: AirDatepicker<HTMLElement> | null = null;
+let popper: any | null = null;
 
 const props = defineProps({
     initialDate: {
@@ -34,56 +35,56 @@ const isDatepickerVisible = ref(false);
 const isInitialized = ref(false);
 
 const toggleDatepicker = async () => {
-    if (!isInitialized.value) return;
+	if (!isInitialized.value) return;
 
-    isDatepickerVisible.value = !isDatepickerVisible.value;
+	isDatepickerVisible.value = !isDatepickerVisible.value;
 
-    await nextTick();
+	await nextTick();
 
-    if (isDatepickerVisible.value) {
-        if (datepicker && datepicker.$datepicker) {
-            datepicker.$datepicker.style.display = 'block';
-            updatePopperPosition();
-            animateShow(datepicker.$datepicker);
-        }
-    } else {
-        if (datepicker && datepicker.$datepicker) {
-            animateHide(datepicker.$datepicker, () => {
-                datepicker.$datepicker.style.display = 'none';
-            });
-        }
-    }
+	if (datepicker && datepicker.$datepicker) {
+		if (isDatepickerVisible.value) {
+			datepicker.$datepicker.style.display = 'block';
+			updatePopperPosition();
+			animateShow(datepicker.$datepicker);
+		} else {
+			animateHide(datepicker.$datepicker, () => {
+				if (datepicker && datepicker.$datepicker) {
+					datepicker.$datepicker.style.display = 'none';
+				}
+			});
+		}
+	}
 };
 
 const updatePopperPosition = () => {
-    if (popper) {
-        popper.update();
-    } else if (datepickerButton.value && datepicker.$datepicker) {
-        popper = createPopper(datepickerButton.value, datepicker.$datepicker, {
-            placement: 'top',
-            modifiers: [
-                {
-                    name: 'offset',
-                    options: {
-                        offset: [0, 10],
-                    },
-                },
-            ],
-        });
-    }
+	if (popper) {
+		popper.update();
+	} else if (datepickerButton.value && datepicker && datepicker.$datepicker) {
+		popper = createPopper(datepickerButton.value, datepicker.$datepicker, {
+			placement: 'top',
+			modifiers: [
+				{
+					name: 'offset',
+					options: {
+						offset: [0, 10],
+					},
+				},
+			],
+		});
+	}
 };
 
-const animateShow = ($datepicker) => {
-    anime({
-        targets: $datepicker,
-        opacity: [0, 1],
-        rotateX: [-90, 0],
-        easing: 'spring(1.3, 80, 5, 0)',
-        duration: 300
-    });
+const animateShow = ($datepicker: HTMLElement) => {
+	anime({
+		targets: $datepicker,
+		opacity: [0, 1],
+		rotateX: [-90, 0],
+		easing: 'spring(1.3, 80, 5, 0)',
+		duration: 300
+	});
 };
 
-const animateHide = ($datepicker, done) => {
+const animateHide = ($datepicker: HTMLElement, done: () => void) => {
     anime({
         targets: $datepicker,
         opacity: 0,
@@ -101,34 +102,36 @@ const animateHide = ($datepicker, done) => {
 };
 
 onMounted(async () => {
-    await nextTick();
+	await nextTick();
 
-    if (datepickerContainer.value && datepickerButton.value) {
-        datepicker = new AirDatepicker(datepickerContainer.value, {
-            dateFormat: 'yyyy-MM-dd',
-            selectedDates: [props.initialDate],
-            locale: localeEn,
-            onSelect: ({ date }) => {
-                if (date instanceof Date) {
-                    emit('dateSelected', date.toISOString().split('T')[0]);
-                    toggleDatepicker();
-                }
-            },
-            position: 'top center',
-            isMobile: true,
-            autoClose: true,
-            onShow: () => {
-                updatePopperPosition();
-            },
-        });
+	if (datepickerContainer.value && datepickerButton.value) {
+		const options: AirDatepickerOptions<HTMLElement> = {
+			dateFormat: 'yyyy-MM-dd',
+			selectedDates: [props.initialDate],
+			locale: localeEn,
+			onSelect: ({ date }) => {
+				if (date && date instanceof Date) {
+					emit('dateSelected', date.toISOString().split('T')[0]);
+					toggleDatepicker();
+				}
+			},
+			position: 'top center' as AirDatepickerPosition,
+			isMobile: true,
+			autoClose: true,
+			onShow: () => {
+				updatePopperPosition();
+			},
+		};
 
-        if (datepicker.$datepicker) {
-            datepicker.$datepicker.style.display = 'none';
-            datepicker.$datepicker.style.transformOrigin = 'top center';
-        }
+		datepicker = new AirDatepicker(datepickerContainer.value, options);
 
-        isInitialized.value = true;
-    }
+		if (datepicker.$datepicker) {
+			datepicker.$datepicker.style.display = 'none';
+			datepicker.$datepicker.style.transformOrigin = 'top center';
+		}
+
+		isInitialized.value = true;
+	}
 });
 
 onUnmounted(() => {

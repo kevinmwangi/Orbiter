@@ -1,10 +1,12 @@
 
 <template>
-    <div :class="$style.orbitsContainer" ref="container">
-        <DatePicker :initial-date="formattedStartDate" @dateSelected="updateDate" />
-        <Orbit :orbit-data="sortedOrbits"/>
-        <SpeedInsights />
-    </div>
+    <NuxtLayout>
+        <div :class="$style.orbitsContainer" ref="container">
+            <DatePicker :initial-date="formattedStartDate" @dateSelected="updateDate" />
+            <Orbit :orbit-data="sortedOrbits"/>
+            <SpeedInsights />
+        </div>
+    </NuxtLayout>
 </template>
 
 <script setup lang="ts">
@@ -32,19 +34,15 @@ useHead({
 })
 
 const startDate = ref(new Date());
-const orbits = ref<SingleOrbit[]>([]);
-
-const formattedStartDate = computed(() => {
-	return startDate.value.toISOString().split('T')[0];
-});
+const formattedStartDate = computed(() => startDate.value.toISOString().split('T')[0]);
 
 // Initial server-side fetch
-const { data: initialOrbits } = await useFetch<SingleOrbit[]>('https://xsrr-l2ye-dpbj.f2.xano.io/api:oUvfVMO5/receive_week', {
-	params: { start_date: formattedStartDate.value },
-	headers: { 'accept': 'application/json' }
+const { data: orbits } = await useAsyncData('orbits', () => {
+	return $fetch<SingleOrbit[]>('https://xsrr-l2ye-dpbj.f2.xano.io/api:oUvfVMO5/receive_week', {
+		params: { start_date: formattedStartDate.value },
+		headers: { 'accept': 'application/json' }
+	});
 });
-
-orbits.value = initialOrbits.value || [];
 
 const fetchOrbits = async (date: string) => {
 	try {

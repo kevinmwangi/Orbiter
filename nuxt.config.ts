@@ -46,8 +46,8 @@ export default defineNuxtConfig({
 			avatar: {
 				modifiers: {
 					format: 'webp',
-					width: 60,
-					height: 60
+					width: 44,
+					height: 44
 				}
 			},
 			profile: {

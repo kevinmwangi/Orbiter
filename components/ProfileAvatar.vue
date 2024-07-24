@@ -6,7 +6,7 @@
             <div :class="$style.profileInfoHeader">
                 <div :class="$style.avatarImage">
                     <nuxt-img :src="avatarImageUrl" preset="avatar" :alt="props.avatarData?.name"
-                              format="webp" width="60" height="60" :class="$style.profileImage" />
+                              format="webp" width="44" height="44" :class="$style.profileImage" />
                 </div>
                 <div :class="$style.avatarInfo">
                     <h1>{{avatarData?.name}}</h1>
