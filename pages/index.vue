@@ -8,15 +8,28 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed,  } from 'vue';
 import { SpeedInsights } from "@vercel/speed-insights/nuxt"
-import DatePicker from '../components/DatePicker.vue'
-import Orbit from '../components/Orbit.vue'
-import type { SingleOrbit } from '~/types';
-    definePageMeta({
-        colorMode: 'dark',
-        pageType: 'Home'
-    })
+import DatePicker from "../components/DatePicker.vue"
+import Orbit from "../components/Orbit.vue"
+import type { SingleOrbit } from "../types";
+
+definePageMeta({
+	title: 'Home',
+	name: 'Orbiter',
+	colorMode: 'dark',
+	pageType: 'Home',
+	keepalive: true,
+	pageTransition: true,
+})
+
+useHead({
+	title: `Orbiter - Home`,
+	meta: [{
+		name: 'description',
+		content: 'User interface allowing scrolling between different orbits (representing time changes)'
+	}]
+})
 
 const startDate = ref(new Date());
 const orbits = ref<SingleOrbit[]>([]);
@@ -54,6 +67,7 @@ const sortedOrbits = computed(() => {
 		new Date(b.contact_date).getTime() - new Date(a.contact_date).getTime()
 	);
 });
+
 
 </script>
 

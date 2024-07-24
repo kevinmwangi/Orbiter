@@ -5,7 +5,7 @@
     "strict": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "types": ["@nuxt/types", "@types/node"],
+    "types": ["@nuxt/types", "@types/node", "@nuxt/image"],
     "typeRoots": ["./types"]
   },
   "include": [

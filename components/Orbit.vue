@@ -22,6 +22,7 @@
 
             <button
                     v-if="hasNextAvatars(orbit.array, orbitIndex)"
+                    aria-label="Show Next"
                     :class="$style.nextButton"
                     :style="getPrevNextPosition('next', orbitIndex)"
                     @click="showNextAvatars(orbitIndex)"
@@ -32,6 +33,7 @@
             </button>
             <button
                     v-if="hasPreviousAvatars(orbitIndex)"
+                    aria-label="Show Previous"
                     :class="$style.prevButton"
                     :style="getPrevNextPosition('prev', orbitIndex)"
                     @click="showPreviousAvatars(orbitIndex)"
@@ -435,16 +437,17 @@ onUnmounted(() => {
     .orbit {
         background-color: transparent;
         position: absolute;
-        border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+        bottom: 0;
+        transform: translateY(-1.25rem) scale(1);
+        
         display: flex;
         justify-content: center;
         align-items: center;
-
-        border-top-width: 1px;
+        
+        border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+        border-top-width: 0.063rem;
         border-top-color: var(--border-color);
         border-top-style: solid;
-
-        bottom: 0;
         
         .currentDate {
             background-color: var(--bg-primary);
@@ -480,20 +483,20 @@ onUnmounted(() => {
             color: var(--color-secondary);
             border: none;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 20px;
+            width: 2.5rem;
+            height: 2.5rem;
+            font-size: 1.25rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: var(--bg-primary) 0 1px 4px, var(--bg-primary) 0 0 0 8px;
+            box-shadow: var(--bg-primary) 0 0.063rem 0.25rem, var(--bg-primary) 0 0 0 0.5rem;
             z-index: 10;
 
             &:hover {
                 background-color: var(--bg-primary);
                 color: var(--color-primary);
-                border: 1px solid var(--border-color);
+                border: 0.063rem solid var(--border-color);
             }
         }
     }

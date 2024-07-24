@@ -1,6 +1,6 @@
 <template>
     <div :class="$style.datePicker">
-        <button :class="$style.calendar" @click="toggleDatepicker" ref="datepickerButton">
+        <button :class="$style.calendar" @click="toggleDatepicker" aria-label="Select Date" ref="datepickerButton">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
             </svg>
@@ -156,25 +156,25 @@ onUnmounted(() => {
     align-items: center;
     justify-content: center;
     position: absolute;
-    bottom: -61.25px;
-    transform: translateY(-50%) translateX(calc(-50% + 122.5px));
+    bottom: -3.828rem;
+    transform: translateY(-50%) translateX(calc(-50% + 7.656rem));
     z-index: 99999;
-    height: 122.5px;
-    width: 245px;
+    height: 7.656rem;
+    width: 15.313rem;
     
     .calendar {
         border-radius: 100%;
         background-color: var(--bg-secondary);
         color: var(--color-secondary);
         cursor: pointer;
-        padding: 1.4rem;
-        width: 100px;
-        height: 100px;
+        padding: 0.75rem;
+        width: 3.75rem;
+        height: 3.75rem;
         
         &:hover {
             background-color: var(--bg-primary);
             color: var(--color-primary);
-            border: 1px solid var(--border-color);
+            border: 0.063rem solid var(--border-color);
         }
     }
 

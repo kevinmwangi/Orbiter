@@ -5,7 +5,8 @@
         <div :class="$style.profileInfo">
             <div :class="$style.profileInfoHeader">
                 <div :class="$style.avatarImage">
-                    <img :src="props.avatarData?.img" :alt="props.avatarData?.name" :class="$style.profileImage">
+                    <nuxt-img preload :src="avatarImageUrl" preset="avatar" :alt="props.avatarData?.name"
+                              format="webp" width="60" height="60" :class="$style.profileImage" />
                 </div>
                 <div :class="$style.avatarInfo">
                     <h1>{{avatarData?.name}}</h1>
@@ -14,10 +15,8 @@
     
                     <div :class="$style.mutualConnections">
                         <div :class="$style.profiles">
-                            <img src='https://images.unsplash.com/photo-1713190277225-9a345031e9ac?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' alt='' :class="$style.profilePicture" />
-                            <img src='https://images.unsplash.com/photo-1713245294954-c5805efcd5da?q=80&w=2063&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' alt='' :class="$style.profilePicture" />
-                            <img src='https://plus.unsplash.com/premium_photo-1713184149461-67ad584d82e6?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' alt='' :class="$style.profilePicture" />
-                            <img src='https://images.unsplash.com/photo-1712781797301-ec9ee12b52b4?q=80&w=2129&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' alt='' :class="$style.profilePicture" />
+                            <nuxt-img preload preset="profile" v-for="(url, index) in profilePictureUrls"
+                                      format="webp" :key="index" width="22.34" height="22.34" :src="url" :alt="`Profile Picture ${index}`" :class="$style.profilePicture" />
                         </div>
                         <div :class="$style.profileCount">
                             <p>
@@ -57,7 +56,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import type {  PropType } from "vue";
 import { getRelativeTime, formatFullDate } from '~/utils'
 import type { Avatar, IntervalId } from "~/types";
@@ -72,6 +71,14 @@ const isShowingMore = ref( false );
 const relativeTime = ref('')
 let intervalId = ref<IntervalId | null>(null)
 const directionClass = ref('');
+const avatarImageUrl = computed(() => props.avatarData?.img || '')
+
+const profilePictureUrls = [
+	'https://images.unsplash.com/photo-1713190277225-9a345031e9ac?q=80&w=23&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+	'https://images.unsplash.com/photo-1713245294954-c5805efcd5da?q=80&w=23&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+	'https://plus.unsplash.com/premium_photo-1713184149461-67ad584d82e6?q=80&w=23&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+	'https://images.unsplash.com/photo-1712781797301-ec9ee12b52b4?q=80&w=23&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+]
 
 const handleAvatarHover = (hover: boolean, event: MouseEvent) => {
 	const target = event.currentTarget as HTMLElement | null;
@@ -178,7 +185,7 @@ onUnmounted(() => {
                 word-wrap: break-word;
                 font-size: 0.8rem;
 
-                h3 {
+                h1 {
                     font-size: 1rem;
                     font-weight: 700;
                     margin-bottom: 0.313rem;
