@@ -5,7 +5,7 @@
         <div :class="$style.profileInfo">
             <div :class="$style.profileInfoHeader">
                 <div :class="$style.avatarImage">
-                    <nuxt-img preload :src="avatarImageUrl" preset="avatar" :alt="props.avatarData?.name"
+                    <nuxt-img :src="avatarImageUrl" preset="avatar" :alt="props.avatarData?.name"
                               format="webp" width="60" height="60" :class="$style.profileImage" />
                 </div>
                 <div :class="$style.avatarInfo">
@@ -15,7 +15,7 @@
     
                     <div :class="$style.mutualConnections">
                         <div :class="$style.profiles">
-                            <nuxt-img preload preset="profile" v-for="(url, index) in profilePictureUrls"
+                            <nuxt-img preset="profile" v-for="(url, index) in profilePictureUrls"
                                       format="webp" :key="index" width="22.34" height="22.34" :src="url" :alt="`Profile Picture ${index}`" :class="$style.profilePicture" />
                         </div>
                         <div :class="$style.profileCount">

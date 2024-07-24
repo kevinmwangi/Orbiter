@@ -84,7 +84,8 @@ const props = defineProps( {
 const containerRef = ref<HTMLDivElement | null>( null );
 const currentDate = ref<HTMLDivElement | null>( null );
 const isAnimating = ref(false);
-const orbitPages = ref<number[]>([0]);
+// const orbitPages = ref<number[]>([0]);
+const orbitPages = ref<number[]>(Array(props.orbitData.length).fill(0));
 const $style = useCssModule();
 const scrollPosition = ref( 0 );
 
@@ -109,9 +110,20 @@ const displayedOrbits = computed(() => {
 	});
 });
 
-const getOrbitDiameter = (orbitIndex: number) => {
-	return roundTo((props.baseRadius + orbitIndex * props.distanceBetweenOrbits) * 2, 4);
-};
+// Memoized function to calculate orbit diameter
+const getOrbitDiameter = (() => {
+	const cache = new Map<number, number>();
+
+	return (orbitIndex: number) => {
+		if (cache.has(orbitIndex)) {
+			return cache.get(orbitIndex)!; // Non-null assertion as cache.has() ensures existence
+		} else {
+			const diameter = roundTo((props.baseRadius + orbitIndex * props.distanceBetweenOrbits) * 2, 4);
+			cache.set(orbitIndex, diameter);
+			return diameter;
+		}
+	};
+})();
 
 // Convert degrees to radians
 const degreesToRadians = (degrees: number) => degrees * (Math.PI / 180);
@@ -122,10 +134,13 @@ const roundTo = (value: number, decimals: number): number => {
 };
 
 const getOrbitPage = (orbitIndex: number): number => {
-	if (orbitPages.value[orbitIndex] === undefined) {
-		orbitPages.value[orbitIndex] = 0;
+	if (orbitIndex >= 0 && orbitIndex < orbitPages.value.length) {
+		return orbitPages.value[orbitIndex];
+	} else {
+		// Handle the case where orbitIndex is out of bounds
+		console.warn(`Invalid orbitIndex: ${orbitIndex}`);
+		return 0; // Or throw an error, etc.
 	}
-	return orbitPages.value[orbitIndex];
 };
 
 const setOrbitPage = (orbitIndex: number, page: number) => {

@@ -1,8 +1,8 @@
 import { defineNuxtConfig } from 'nuxt/config'
 
 export default defineNuxtConfig({
-	devtools: { enabled: false },
-	dev: false,
+	devtools: { enabled: true },
+	dev: true,
 	debug: true,
 	pages: true,
 
