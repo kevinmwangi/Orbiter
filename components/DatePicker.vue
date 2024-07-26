@@ -111,12 +111,13 @@ onMounted(async () => {
 			locale: localeEn,
 			onSelect: ({ date }) => {
 				if (date && date instanceof Date) {
-					emit('dateSelected', date.toISOString().split('T')[0]);
+					const selectedDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+					emit('dateSelected', selectedDate.toISOString().split('T')[0]);
 					toggleDatepicker();
 				}
 			},
 			position: 'top center' as AirDatepickerPosition,
-			isMobile: true,
+			isMobile: false,
 			autoClose: true,
 			onShow: () => {
 				updatePopperPosition();

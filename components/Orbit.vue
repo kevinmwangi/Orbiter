@@ -3,7 +3,7 @@
     <div :class="$style.orbitContainer" ref="containerRef">
         <div
                 v-for="(orbit, orbitIndex) in displayedOrbits"
-                :key="orbit.contact_date"
+                :key="`${orbit.contact_date}_${orbitIndex}`"
                 :class="$style.orbit"
                 :style="{
                     width: `${getOrbitDiameter(orbitIndex)}px`,
@@ -14,7 +14,7 @@
                 }">
             <div v-if="(orbitIndex + 1) === props.maxOrbits" :class="$style.currentDate" :style="getCurrentDate(orbitIndex)" ref="currentDate">{{ formatDate(orbit.contact_date) }}</div>
             <ProfileAvatar v-for="(avatar, avatarIndex) in getVisibleAvatars(orbit.array, orbitIndex)"
-                           :key="avatar.id"
+                           :key="`${avatar.id}_${avatar.created_at}_${orbitIndex}`"
                            :avatarData="avatar"
                            :class="$style.avatarWrapper"
                            :style="getAvatarPosition(avatarIndex, getMaxAvatars(orbitIndex), orbitIndex)"

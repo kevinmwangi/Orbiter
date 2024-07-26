@@ -16,7 +16,7 @@
                     <div :class="$style.mutualConnections">
                         <div :class="$style.profiles">
                             <nuxt-img preset="profile" v-for="(url, index) in profilePictureUrls"
-                                      format="webp" :key="index" width="22.34" height="22.34" :src="url" :alt="`Profile Picture ${index}`" :class="$style.profilePicture" />
+                                      format="webp" :key="`${index}_${avatarData?.created_at}_${avatarData?.id}`" width="22.34" height="22.34" :src="url" :alt="`Profile Picture ${index}`" :class="$style.profilePicture" />
                         </div>
                         <div :class="$style.profileCount">
                             <p>

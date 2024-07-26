@@ -1,6 +1,6 @@
 <template>
         <section :class="$style.sectionOrbiter">
-            <div v-if="orbits" :class="$style.orbitsContainer" ref="container">
+            <div v-if="status === 'success'" :class="$style.orbitsContainer" ref="container">
                 <DatePicker :initial-date="startDate" @dateSelected="updateDate" />
                 <Orbit :orbit-data="sortedOrbits"/>
                 <SpeedInsights />
@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import { definePageMeta, useHead, useAsyncData, useFetch } from '#imports'
+import { definePageMeta, useHead, useAsyncData } from '#imports'
 import { ref, computed } from 'vue';
 import { SpeedInsights } from "@vercel/speed-insights/nuxt"
 import Loader from "../components/Loader.vue"
@@ -39,7 +39,7 @@ useHead({
 let startDate = ref(new Date().toISOString().split('T')[0]);
 
 // Server-Side Fetch Using useAsyncData
-const { data: orbits } = await useAsyncData('orbits', async () => {
+const { data: orbits, status, execute } = await useAsyncData('orbits', async () => {
 	try {
 		return await $fetch<SingleOrbit[]>('https://xsrr-l2ye-dpbj.f2.xano.io/api:oUvfVMO5/receive_week', {
 			params: { start_date: startDate.value },
@@ -59,9 +59,17 @@ const sortedOrbits = computed(() => {
 	);
 });
 
-const updateDate = (newDate: string) => {
-	startDate.value = new Date(newDate).toISOString().split('T')[0];
+const updateDate = async (newDate: string) => {
+	startDate.value = new Date(newDate + 'T00:00:00Z').toISOString().split('T')[0];
+	await execute()
 };
+
+// const updateDate = async (newDate: string) => {
+// 	// Ensure the new date is treated as UTC
+// 	const date = new Date(newDate + 'T00:00:00Z');
+// 	startDate.value = date.toISOString().split('T')[0];
+// 	await execute();
+// };
 
 </script>
 
